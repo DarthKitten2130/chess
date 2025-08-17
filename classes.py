@@ -43,12 +43,10 @@ class Piece(pg.sprite.Sprite):
 
         for coord in self.movable_tiles:
             simulated_grid = self.copy_chess_grid(chess_grid)
-            # Move piece in simulated grid
             simulated_grid[original_x][original_y] = None
             simulated_piece = simulated_grid[coord[0]][coord[1]] = self.__class__(coord[0], coord[1], self.color)
             simulated_piece.moved = self.moved
 
-            # Build simulated live_pieces group from the simulated grid
             simulated_pieces = []
             for i in range(8):
                 for j in range(8):
@@ -57,7 +55,7 @@ class Piece(pg.sprite.Sprite):
             simulated_king = next((p for p in simulated_pieces if isinstance(p, King) and p.color == turn), None)
 
             if not simulated_king.check(turn, simulated_pieces, simulated_grid):
-                mt.add((coord[0], coord[1]))  # Use tuple for hashability
+                mt.add((coord[0], coord[1]))
 
         return mt
 
@@ -68,9 +66,9 @@ class Piece(pg.sprite.Sprite):
             for j in range(8):
                 if chess_grid[i][j] is not None:
                     piece = chess_grid[i][j]
-                    new_grid[i][j] = piece.__class__(piece.x, piece.y, piece.color)  # Create new instance
-                    new_grid[i][j].movable_tiles = piece.movable_tiles.copy()  # Copy move data
-                    new_grid[i][j].moved = piece.moved  # Preserve moved status
+                    new_grid[i][j] = piece.__class__(piece.x, piece.y, piece.color)
+                    new_grid[i][j].movable_tiles = piece.movable_tiles.copy()
+                    new_grid[i][j].moved = piece.moved
         return new_grid
 
 
@@ -146,7 +144,6 @@ class King(Piece):
         for piece in enemy_pieces:
             piece.legal_move(chess_grid, live_pieces)
 
-        # Check if any enemy piece can attack the king
         for piece in enemy_pieces:
             if king_pos in piece.movable_tiles:
                 return True
@@ -289,16 +286,14 @@ class Pawn(Piece):
                         chess_grid[self.x - 1][self.y + 1].color != self.color:
                     lst.add((self.x - 1, self.y + 1))
 
-            # En passant right - ADD BOUNDS CHECK
-            if self.x + 1 <= 7:  # This line is already correct
+            if self.x + 1 <= 7:
                 right_piece = chess_grid[self.x + 1][self.y]
                 if isinstance(right_piece, Pawn) and right_piece.color != self.color and right_piece.en_passant:
                     target_y = self.y - 1 if self.color == 'white' else self.y + 1
                     if 0 <= target_y <= 7:
                         lst.add((self.x + 1, target_y))
 
-            # En passant left - ADD BOUNDS CHECK
-            if self.x - 1 >= 0:  # This line is already correct
+            if self.x - 1 >= 0:
                 left_piece = chess_grid[self.x - 1][self.y]
                 if isinstance(left_piece, Pawn) and left_piece.color != self.color and left_piece.en_passant:
                     target_y = self.y - 1 if self.color == 'white' else self.y + 1

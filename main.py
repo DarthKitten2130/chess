@@ -121,20 +121,17 @@ def main():
                             text = font.render("Checkmate! " + turn.capitalize() + " loses!", True, (255, 0, 0))
                             text_rect = text.get_rect(center=(w_size[0] // 2, w_size[1] // 2))
 
-                            # Redraw everything
                             board.draw(screen)
                             live_pieces.draw(screen)
                             screen.blit(text, text_rect)
                             pg.display.flip()
 
-                            # Wait while still processing events
                             wait_start = time.time()
                             while time.time() - wait_start < 5:
                                 for event in pg.event.get():
                                     if event.type == pg.QUIT:
                                         pg.quit()
                                         quit()
-                                # Optional: Add a short delay to reduce CPU usage
                                 pg.time.delay(100)
 
                             pg.quit()
@@ -144,20 +141,17 @@ def main():
                             text = font.render("Stalemate! No legal moves available!", True, (255, 0, 0))
                             text_rect = text.get_rect(center=(w_size[0] // 2, w_size[1] // 2))
 
-                            # Redraw everything
                             board.draw(screen)
                             live_pieces.draw(screen)
                             screen.blit(text, text_rect)
                             pg.display.flip()
 
-                            # Wait while still processing events
                             wait_start = time.time()
                             while time.time() - wait_start < 5:
                                 for event in pg.event.get():
                                     if event.type == pg.QUIT:
                                         pg.quit()
                                         quit()
-                                # Optional: Add a short delay to reduce CPU usage
                                 pg.time.delay(100)
 
                             pg.quit()
